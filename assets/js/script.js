@@ -6,6 +6,9 @@ jQuery(document).ready(function ($) {
 
         $.post(cfp_ajax_obj.ajax_url, formData, function (response) {
             $('#cfp-response').html(response);
+
+            // ✅ CLEAR FORM AFTER SUCCESS
+            form.trigger("reset");
         });
     });
 });
