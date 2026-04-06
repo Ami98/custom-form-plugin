@@ -1,5 +1,14 @@
 <?php
 
+/*
+
+        $wpdb->get_results() → fetch data
+        Loop → display entries in table
+        Admin sees all submissions
+
+*/
+
+
 function cfp_admin_menu()
 {
     add_menu_page(

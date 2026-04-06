@@ -3,6 +3,12 @@
 /**
  * Database File for Custom Form Plugin
  * This file contains the function to create the database table for storing form entries.
+ * 
+ * global $wpdb; → WordPress database object
+ * $wpdb->prefix → usually wp_
+ * cfp_entries → your custom table name
+ * dbDelta() → safely creates/updates table
+ * register_activation_hook() → runs when plugin activates
  */
 
 

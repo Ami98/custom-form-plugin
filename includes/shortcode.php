@@ -1,5 +1,14 @@
 <?php
 
+/**
+ * ob_start() → start output buffering
+ * Form fields → name, email, message
+ * action → tells AJAX which function to call
+ * wp_nonce_field() → security token
+ * add_shortcode() → use [custom_form] anywhere
+         
+ */
+
 function cfp_form_shortcode()
 {
     ob_start();
