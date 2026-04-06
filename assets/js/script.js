@@ -2,12 +2,13 @@ jQuery(document).ready(function ($) {
     $('#cfp-form').submit(function (e) {
         e.preventDefault();
 
-        var formData = $(this).serialize();
+        var form = $(this); //  store form
+        var formData = form.serialize();
 
         $.post(cfp_ajax_obj.ajax_url, formData, function (response) {
             $('#cfp-response').html(response);
 
-            // ✅ CLEAR FORM AFTER SUCCESS
+            // reset form (CORRECT)
             form.trigger("reset");
         });
     });
