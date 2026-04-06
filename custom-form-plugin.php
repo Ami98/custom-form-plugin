@@ -6,6 +6,10 @@ Version: 1.0
 Author: Ami Dalwadi
 */
 
+if (!defined('ABSPATH')) {
+    exit;
+}
+
 function cfp_create_table()
 {
     global $wpdb;
@@ -55,7 +59,8 @@ function cfp_form_shortcode()
 add_shortcode('custom_form', 'cfp_form_shortcode');
 
 
-function cfp_enqueue_scripts() {
+function cfp_enqueue_scripts()
+{
     wp_enqueue_script('cfp-script', plugin_dir_url(__FILE__) . 'js/script.js', array('jquery'), null, true);
 
     wp_localize_script('cfp-script', 'cfp_ajax_obj', array(
@@ -64,22 +69,13 @@ function cfp_enqueue_scripts() {
 }
 add_action('wp_enqueue_scripts', 'cfp_enqueue_scripts');
 
-jQuery(document).ready(function ($) {
-    $('#cfp-form').submit(function (e) {
-        e.preventDefault();
 
-        var formData = $(this).serialize();
 
-        $.post(cfp_ajax_obj.ajax_url, formData, function (response) {
-            $('#cfp-response').html(response);
-        });
-    });
-});
-
-function cfp_handle_form() {
+function cfp_handle_form()
+{
 
     if (!isset($_POST['cfp_nonce']) || !wp_verify_nonce($_POST['cfp_nonce'], 'cfp_nonce_action')) {
-        die('Security check failed');
+        wp_die('Security check failed');
     }
 
     global $wpdb;
@@ -108,7 +104,8 @@ function cfp_handle_form() {
 add_action('wp_ajax_cfp_submit_form', 'cfp_handle_form');
 add_action('wp_ajax_nopriv_cfp_submit_form', 'cfp_handle_form');
 
-function cfp_admin_menu() {
+function cfp_admin_menu()
+{
     add_menu_page(
         'Form Entries',
         'Form Entries',
@@ -119,7 +116,8 @@ function cfp_admin_menu() {
 }
 add_action('admin_menu', 'cfp_admin_menu');
 
-function cfp_admin_page() {
+function cfp_admin_page()
+{
     global $wpdb;
 
     $table_name = $wpdb->prefix . 'cfp_entries';
@@ -131,11 +129,11 @@ function cfp_admin_page() {
 
     foreach ($results as $row) {
         echo "<tr>
-            <td>{$row->id}</td>
-            <td>{$row->name}</td>
-            <td>{$row->email}</td>
-            <td>{$row->message}</td>
-            <td>{$row->created_at}</td>
+            <td><?php echo esc_html($row->id); ?></td>
+            <td><?php echo esc_html($row->name); ?></td>
+            <td><?php echo esc_html($row->email); ?></td>
+            <td><?php echo esc_html($row->message); ?></td>
+            <td><?php echo esc_html($row->created_at); ?></td>
         </tr>";
     }
 
