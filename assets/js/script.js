@@ -1,48 +1,45 @@
 
 /*
-
         e.preventDefault() → stop page reload
-        serialize() → collect form data
-        $.post() → send AJAX request
+        fetch() → send AJAX request
         Response shown in #cfp-response
-        form.trigger("reset") → reset form after submission
+        form.reset() → reset form after submission
 */
 
+document.addEventListener("DOMContentLoaded", function () {
 
-// jQuery(document).ready(function ($) {
-//     $('#cfp-form').submit(function (e) {
-//         e.preventDefault();
+    const form = document.getElementById("cfp-form-new");
 
-//         let form = new FormData(this); //  store form
-//         var formData = form.serialize();
+    if (form) {
+        form.addEventListener("submit", function (e) {
+            e.preventDefault();
 
-//         $.post(cfp_ajax_obj.ajax_url, formData, function (response) {
-//             $('#cfp-response').html(response);
+            const formData = new FormData(form);
 
-//             // reset form (CORRECT)
-//             form.trigger("reset");
-//         });
-//     });
-// });
+            fetch(cfp_rest.rest_url, {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json",
+                    "X-WP-Nonce": cfp_rest.nonce
+                },
+                body: JSON.stringify({
+                    name: formData.get("name"),
+                    email: formData.get("email"),
+                    message: formData.get("message")
+                })
+            })
+            .then(res => res.json())
+            .then(data => {
+                document.getElementById("cfp-message").innerText = data.message;
 
-
-document.getElementById("cfp-form").addEventListener("submit", function (e) {
-    e.preventDefault();
-    let form = this; // define form here
-    let formData = new FormData(this);
-    formData.append("action", "cfp_save");
-    formData.append("nonce", cfp_ajax.nonce);
-
-    fetch(cfp_ajax.ajax_url, {
-        method: "POST",
-        body: formData
-    })
-        .then(res => res.text())
-        .then(data => {
-            document.getElementById("cfp-message").innerText = data;
-
-            // Reset form after success
-            form.reset();
-
+                if (data.status === "success") {
+                    form.reset();
+                }
+            })
+            .catch(error => {
+                console.error("Error:", error);
+            });
         });
-});
+    }
+
+}); // ✅ THIS WAS MISSING

@@ -12,7 +12,7 @@
  */
 
 
-function cfp_create_table()
+function cfp_create_table_new()
 {
     global $wpdb;
 
