@@ -1,45 +1,79 @@
 
 /*
+
         e.preventDefault() → stop page reload
-        fetch() → send AJAX request
+        serialize() → collect form data
+        $.post() → send AJAX request
         Response shown in #cfp-response
-        form.reset() → reset form after submission
+        form.trigger("reset") → reset form after submission
 */
+
+
+// jQuery(document).ready(function ($) {
+//     $('#cfp-form').submit(function (e) {
+//         e.preventDefault();
+
+//         let form = new FormData(this); //  store form
+//         var formData = form.serialize();
+
+//         $.post(cfp_ajax_obj.ajax_url, formData, function (response) {
+//             $('#cfp-response').html(response);
+
+//             // reset form (CORRECT)
+//             form.trigger("reset");
+//         });
+//     });
+// });
 
 document.addEventListener("DOMContentLoaded", function () {
 
-    const form = document.getElementById("cfp-form-new");
+    const form = document.getElementById("cfp-form");
+    const messageBox = document.getElementById("cfp-message");
 
-    if (form) {
-        form.addEventListener("submit", function (e) {
-            e.preventDefault();
-
-            const formData = new FormData(form);
-
-            fetch(cfp_rest.rest_url, {
-                method: "POST",
-                headers: {
-                    "Content-Type": "application/json",
-                    "X-WP-Nonce": cfp_rest.nonce
-                },
-                body: JSON.stringify({
-                    name: formData.get("name"),
-                    email: formData.get("email"),
-                    message: formData.get("message")
-                })
-            })
-            .then(res => res.json())
-            .then(data => {
-                document.getElementById("cfp-message").innerText = data.message;
-
-                if (data.status === "success") {
-                    form.reset();
-                }
-            })
-            .catch(error => {
-                console.error("Error:", error);
-            });
-        });
+    if (!form) {
+       // console.error("Form not found!");
+        return;
     }
 
-}); // ✅ THIS WAS MISSING
+    form.addEventListener("submit", function (e) {
+        e.preventDefault();
+
+        const formData = new FormData(form);
+        formData.append("action", "cfp_save");
+        formData.append("nonce", cfp_ajax.nonce);
+
+        // Disable button (UX improvement)
+        const button = form.querySelector("button");
+        if (button) button.disabled = true;
+
+        fetch(cfp_ajax.ajax_url, {
+            method: "POST",
+            body: formData
+        })
+        .then(res => res.text())
+        .then(data => {
+
+            if (messageBox) {
+                messageBox.innerText = data;
+            }
+
+            // Reset only if success
+            if (data.includes("success")) {
+                form.reset();
+            }
+
+        })
+        .catch(error => {
+            console.error("Error:", error);
+
+            if (messageBox) {
+                messageBox.innerText = "Something went wrong!";
+            }
+        })
+        .finally(() => {
+            if (button) button.disabled = false;
+        });
+
+    });
+
+});
