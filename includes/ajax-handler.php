@@ -12,7 +12,7 @@
     */
 
 
-    function cfp_handle_form()
+    function cfp_save_ajax()
     {
 
         if (
@@ -21,6 +21,9 @@
         ) {
             wp_die('Security check failed');
         }
+
+        // check_ajax_referer('cfp_nonce', 'nonce');
+
 
         global $wpdb;
         $table_name = $wpdb->prefix . 'cfp_entries';
@@ -49,5 +52,5 @@
     }
 
     // AJAX hooks
-    add_action('wp_ajax_cfp_submit_form', 'cfp_handle_form');
-    add_action('wp_ajax_nopriv_cfp_submit_form', 'cfp_handle_form');
+    add_action('wp_ajax_cfp_save', 'cfp_save_ajax');
+    add_action('wp_ajax_nopriv_cfp_save', 'cfp_save_ajax');

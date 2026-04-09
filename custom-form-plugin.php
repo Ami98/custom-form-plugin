@@ -1,7 +1,7 @@
 <?php
 /*
 Plugin Name: Custom Form Plugin
-Description: Simple Custom Form with AJAX
+Description: Simple Custom Form submitd with AJAX uisng admin-ajax VERSION [custom_form]
 Version: 1.0
 Author: Ami Dalwadi
 */
@@ -20,7 +20,6 @@ define('CFP_URL', plugin_dir_url(__FILE__));
 require_once CFP_PATH . 'includes/db-table.php';
 require_once CFP_PATH . 'includes/shortcode.php';
 require_once CFP_PATH . 'includes/ajax-handler.php';
-require_once CFP_PATH . 'includes/admin-page.php';
 
 /* =============================
    ACTIVATION HOOK (IMPORTANT)
@@ -35,14 +34,14 @@ register_activation_hook(__FILE__, 'cfp_create_table');
 function cfp_enqueue_scripts()
 {
     wp_enqueue_script(
-        'cfp-script',
+        'cfp-js',
         CFP_URL . 'assets/js/script.js',
-        array('jquery'),
+        [],
         null,
         true
     );
 
-    wp_localize_script('cfp-script', 'cfp_ajax_obj', array(
+    wp_localize_script('cfp-js', 'cfp_ajax', array(
         'ajax_url' => admin_url('admin-ajax.php')
     ));
 }

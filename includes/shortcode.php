@@ -25,7 +25,7 @@ function cfp_form_shortcode()
         <button type="submit">Submit</button>
     </form>
 
-    <div id="cfp-response"></div>
+    <div id="cfp-message"></div>
 
 <?php
     return ob_get_clean();
